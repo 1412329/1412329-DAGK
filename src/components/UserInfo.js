@@ -19,7 +19,7 @@ class UserInfo extends Component {
     //Provider authentication
     authenticate = provider => {
         console.log(provider);
-        const authProvider = new firebase.auth['${provider}AuthProvider']();
+        const authProvider = new firebase.auth[`${provider}AuthProvider`]();
         firebaseApp
         .auth()
         .signInWithPopup(authProvider)
@@ -35,20 +35,37 @@ class UserInfo extends Component {
         });
     };
 
+    logout = async () => {
+        console.log("logout");
+        await firebase.auth().signOut();
+        this.setState({ email: null, displayName: null});
+    };
+
+
     render() {
         const logout = <button onClick={this.logout}>Log Out!</button>;
-        if(!this.state.email){
-            return <Login authenticate={this.authenticate} />;
+        if (!this.state.email) {
+          return <Login authenticate={this.authenticate} />;
         }
         return (
-            <div className="user-info">
-                <label>Email:</label>
-                <span type ="text" id="email">
-                    test@test.com
+            <div>
+                <div className="user-info">
+                <label>User name: </label>
+                <span type="text" id="email">
+                    {this.state.displayName}
                 </span>
+                </div>
+
+                <div className="user-info">
+                <label>Email: </label>
+                <span type="text" id="email">
+                    {this.state.email}
+                </span>
+                </div>
+                <div>{logout}</div>
             </div>
         );
-    }
+      }
 }
 
 export default UserInfo;
